@@ -1,0 +1,152 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                    🔐 GOOGLE AUTH QUICK REFERENCE                         ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+📍 STEP 1: Configure Google Cloud Console
+───────────────────────────────────────────────────────────────────────────
+🔗 URL: https://console.cloud.google.com/apis/credentials
+
+Find your OAuth 2.0 Client ID:
+   Client ID: 476787265410-78tmiariuks4jg0k8dc0r4s1uff6o865.apps.googleusercontent.com
+
+Add these Authorized redirect URIs:
+   ✓ http://localhost:3000/api/auth/callback/google
+   ✓ http://127.0.0.1:3000/api/auth/callback/google
+
+Add these Authorized JavaScript origins:
+   ✓ http://localhost:3000
+   ✓ http://127.0.0.1:3000
+
+⚠️  IMPORTANT: Click SAVE and wait 5-10 minutes for changes to propagate!
+
+───────────────────────────────────────────────────────────────────────────
+📍 STEP 2: Test Google Sign-In
+───────────────────────────────────────────────────────────────────────────
+
+Option A: Via the App
+   1. Go to: http://localhost:3000
+   2. Click "Sign In" button
+   3. Click "Continue with Google"
+   4. Select your Gmail account
+   5. Grant permissions
+
+Option B: Direct Link
+   Open: http://localhost:3000/api/auth/signin/google
+
+───────────────────────────────────────────────────────────────────────────
+📍 STEP 3: Verify User in MongoDB
+───────────────────────────────────────────────────────────────────────────
+
+Run this command:
+   node scripts/check-users.js
+
+Expected Output:
+   👤 USER #X
+   📧 Email:       youremail@gmail.com
+   👤 Name:        Your Name
+   🔖 Username:    youremail
+   🔐 Provider:    google
+   🖼️  Image:       https://lh3.googleusercontent.com/a/...
+   🔑 Has Password: No (OAuth)
+
+───────────────────────────────────────────────────────────────────────────
+🐛 COMMON ISSUES
+───────────────────────────────────────────────────────────────────────────
+
+Issue: "Redirect URI Mismatch"
+Solution: 
+   - Verify redirect URI in Google Console matches exactly
+   - Wait 5-10 minutes after saving
+   - Try in incognito mode
+
+Issue: "Invalid Client"
+Solution:
+   - Check GOOGLE_CLIENT_ID in .env file
+   - Remove any extra spaces or quotes
+   - Restart dev server: Ctrl+C, then npm run dev
+
+Issue: User not saved to MongoDB
+Solution:
+   - Check terminal for "MongoDB connected"
+   - Look for error messages in terminal
+   - Verify DATABASE_URL in .env
+
+───────────────────────────────────────────────────────────────────────────
+✅ CHECKLIST BEFORE TESTING
+───────────────────────────────────────────────────────────────────────────
+
+□ Dev server is running (npm run dev)
+□ Terminal shows "MongoDB connected"
+□ No errors in terminal
+□ Google Cloud Console redirect URIs configured
+□ Waited 5-10 minutes after Google Console changes
+□ Browser allows third-party cookies
+
+───────────────────────────────────────────────────────────────────────────
+🎯 WHAT HAPPENS DURING GOOGLE SIGN-IN
+───────────────────────────────────────────────────────────────────────────
+
+1. Click "Continue with Google"
+   → NextAuth redirects to Google OAuth
+
+2. Google Login Screen
+   → Enter Gmail credentials
+   → Grant permissions
+
+3. Google Callback
+   → Returns user data to /api/auth/callback/google
+
+4. App Processes Data (auth.js)
+   → Checks if user exists by email
+   → Creates new user if needed
+   → Generates username from email
+   → Saves to MongoDB
+
+5. User is Signed In
+   → Session created
+   → Redirected to home page
+   → User profile appears in navbar
+
+───────────────────────────────────────────────────────────────────────────
+📝 TERMINAL LOGS TO WATCH FOR
+───────────────────────────────────────────────────────────────────────────
+
+Good Signs:
+✅ MongoDB connected
+✅ POST /api/auth/signin/google 200
+✅ GET /api/auth/callback/google 200
+✅ GET /api/auth/session 200
+
+Bad Signs:
+❌ [auth][error] CallbackRouteError
+❌ Error: Redirect URI mismatch
+❌ Error: Invalid client
+❌ MongoDB connection error
+
+───────────────────────────────────────────────────────────────────────────
+🚀 QUICK COMMANDS
+───────────────────────────────────────────────────────────────────────────
+
+Start server:        npm run dev
+Check users:         node scripts/check-users.js
+View Google setup:   node scripts/test-google-auth.js
+Open app:            http://localhost:3000
+Google sign-in:      http://localhost:3000/api/auth/signin/google
+Google Console:      https://console.cloud.google.com/apis/credentials
+
+───────────────────────────────────────────────────────────────────────────
+💡 TIPS
+───────────────────────────────────────────────────────────────────────────
+
+• Use a real Gmail account for testing
+• Check browser console for client-side errors (F12)
+• Check terminal for server-side errors
+• Try incognito mode if cookies are blocked
+• Clear browser cache if issues persist
+• Ensure popup blockers are disabled
+
+───────────────────────────────────────────────────────────────────────────
+
+🎉 Ready to test! Click "Continue with Google" in the browser window!
+
+═══════════════════════════════════════════════════════════════════════════
